@@ -66,7 +66,7 @@ determine the exact padding."
    (dark-cyan  '("#204052" "#5699AF" "cyan"))
 
    ;; face categories -- required for all themes
-   (highlight      blue)
+   (highlight      (doom-darken orange 0.1))
    (vertical-bar   (doom-darken base1 0.5))
    (selection      dark-blue)
    (builtin        (doom-lighten fg 0.1))

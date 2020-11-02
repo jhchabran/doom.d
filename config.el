@@ -31,6 +31,7 @@
 ;; `load-theme' function. This is the default:
 ;; (setq doom-theme 'doom-oceanic-next)
 (setq doom-theme 'doom-nuit-dark)
+(setq doom-nuit-dark-brighter-comments t)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -84,13 +85,15 @@
 
 (after! org (setq org-hide-emphasis-markers t))
 (after! org (setq org-insert-heading-respect-content nil))
+(after! org (setq org-src-tab-acts-natively t))
 
 (custom-set-faces
-  '(org-level-1 ((t (:inherit outline-1 :height 2.0))))
-  '(org-level-2 ((t (:inherit outline-2 :height 1.5))))
+  '(org-level-1 ((t (:inherit outline-1 :height 1.2))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.1))))
   '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-  '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+  '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+  '(org-document-title ((t (:inherit outline-1 :heigth 1.5)))))
 
 (after! org-roam
   (add-hook 'org-roam-mode-hook (lambda ())
