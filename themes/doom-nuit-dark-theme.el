@@ -50,9 +50,7 @@ determine the exact padding."
    (base7      '("#788484" "#788484" "brightblack"))
    (base8      '("#626C6C" "#626C6C" "white"))
    (fg-alt     '("#657b83" "#657b83" "white"))
-   (fg         (if doom-nuit-dark-brighter-text
-                '("#BBBBBB" "#BBBBBB" "brightwhite")
-                '("#839496" "#839496" "brightwhite")))
+   (fg         '("#b58900" "#839496" "brightwhite"))
 
    (grey       base4)
    (red        '("#dc322f" "#ff6655" "red"))
@@ -79,7 +77,7 @@ determine the exact padding."
    (keywords       (doom-lighten fg 0.5))       ;; green)
    (methods        cyan)
    (operators      orange)
-   (type           blue)
+   (type           (doom-lighten fg 0.7))
    (strings        (doom-lighten fg 0.2))        ;;cyan)
    (variables      fg)
    (numbers        (doom-lighten fg 0.2))
