@@ -53,10 +53,7 @@
   :recipe (:local-repo "~/code/src/github.com/jhchabran/ivy-lsp-current-buffer-symbols"
            :no-byte-compile t))
 
-(package! org-watchlist
-  :recipe (:local-repo "~/code/src/github.com/jhchabran/org-watchlist"
-           :no-byte-compile t))
-
+(package! mixed-pitch)
 (unpin! doom-themes)
 
 (package! mixed-pitch)
