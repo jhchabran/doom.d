@@ -74,6 +74,8 @@
   :desc "Switch to last buffer" "TAB" #'evil-switch-to-windows-last-buffer)
  (:prefix-map ("p" . "project")
   :desc "Launch term with custom name" "$" #'jh/launch-term-and-rename)
+ (:prefix-map ("p" . "project")
+  :desc "Open notes for the current project" "n" #'jh/open-project-notes)
  (:prefix-map ("c" . "code")
   :desc "Jump to local symbol" "c" #'ivy-lsp-current-buffer-symbols-jump))
 
