@@ -22,9 +22,13 @@
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
-(setq doom-font (font-spec :family "Fira Code Retina" :size 13)
-      doom-big-font (font-spec :family "Fira Code Retina" :size 18)
-      doom-variable-pitch-font (font-spec :family "ETBembo" :size 18))
+(setq doom-font (font-spec :family "IBM Plex Mono" :size 14)
+      doom-big-font (font-spec :family "IBM Plex Mono" :size 18)
+      doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :size 18))
+
+;; Bold is often too heavy for my taste
+(setq doom-themes-enable-bold nil)
+(setq doom-themes-enable-italic nil)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
