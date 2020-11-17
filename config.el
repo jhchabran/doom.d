@@ -95,9 +95,9 @@
              org-insert-heading-respect-content nil
              org-src-tab-acts-natively t))
 
-(add-hook 'text-mode-hook (lambda ()
-                            (setq left-margin-width 8
-                                  right-margin-width 8)))
+(setq-default left-margin-width 2 right-margin-width 2)
+(set-window-buffer nil (current-buffer))
+(setq scroll-margin 6)
 
 (custom-set-faces
   '(org-level-1 ((t (:inherit outline-1 :height 1.2))))
