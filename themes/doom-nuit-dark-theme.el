@@ -124,8 +124,8 @@ determine the exact padding."
                    :extend t)
 
    (font-lock-comment-face
-    :foreground comments
-    :background (if doom-nuit-dark-comment-bg (doom-lighten bg 0.05)))
+    :foreground comments)
+    ;; :background (if doom-nuit-dark-comment-bg (doom-lighten bg 0.05)))
    (font-lock-doc-face
     :inherit 'font-lock-comment-face
     :foreground doc-comments)
@@ -190,7 +190,7 @@ determine the exact padding."
 
    ;; org-mode
    ((org-block &override) :background base0)
-   ((org-code &override) :foreground yellow :background bg-alt)
+   ((org-code &override) :foreground yellow)
    ((org-block-begin-line &override) :foreground comments :background base0)
    (org-hide :foreground hidden)
    (solaire-org-hide-face :foreground hidden)))
