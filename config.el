@@ -133,12 +133,27 @@
     :not-equal "!="
     :for "for"))
 
+;; https://github.com/hlissner/doom-emacs/issues/1530
+(add-hook! 'lsp-after-initialize-hook
+  (run-hooks (intern (format "%s-lsp-hook" major-mode))))
+(defun go-flycheck-setup ()
+  (flycheck-add-next-checker 'lsp 'golangci-lint))
+(add-hook 'go-mode-lsp-hook
+          #'go-flycheck-setup)
+
 ;; Javascript
 (setq js2-basic-offset 2)
+
+;; Misc scripts
+;; Make the current line highlight active only when idle
+(use-package! hl-line+
+  :load-path "3rd"
+  :config
+  (hl-line-when-idle-interval 0.3)
+  (toggle-hl-line-when-idle 1))
 
 ;; My own stuff
 (require 'ivy-lsp-current-buffer-symbols)
 
 (load! "+functions")
 (load! "themes/doom-nuit-dark-theme")
-
