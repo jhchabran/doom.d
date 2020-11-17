@@ -37,6 +37,9 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
+;; Use both explicit tags and the last directory to tag roam notes
+;; (setq org-roam-tag-sources '(prop last-directory))
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type nil)

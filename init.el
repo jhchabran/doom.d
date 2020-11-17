@@ -35,7 +35,7 @@
        ;;hydra
        ;;indent-guides     ; highlighted indent columns
        ;;minimap           ; show a map of the code on the side
-       modeline          ; snazzy, Atom-inspired modeline, plus API
+       (modeline)          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
@@ -67,7 +67,7 @@
        :emacs
        dired             ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       ;;ibuffer         ; interactive buffer management
+       ibuffer         ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
@@ -90,10 +90,10 @@
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
-       ;;gist              ; interacting with github gists
+       gist              ; interacting with github gists
        (lookup +docsets)              ; navigate your code and its documentation
        lsp
-       ;;macos             ; MacOS-specific commands
+       ;; macos             ; MacOS-specific commands
        magit             ; a git porcelain for Emacs
        make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
@@ -145,7 +145,7 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +roam)               ; organize your plain life in plain text
+       (org +pretty +roam)               ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
