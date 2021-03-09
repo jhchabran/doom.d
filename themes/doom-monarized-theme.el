@@ -1,0 +1,1 @@
+/Users/tech/mycode/doom-monarized-theme/doom-monarized-theme.el
