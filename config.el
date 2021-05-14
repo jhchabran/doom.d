@@ -3,6 +3,8 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+;; Attempt at fixing spinner of death
+(setq gcmh-high-cons-threshold (* 16 1024 1024))
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -22,24 +24,20 @@
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
-(setq doom-font (font-spec :family "IBM Plex Mono" :size 14)
-      doom-big-font (font-spec :family "IBM Plex Mono" :size 18)
-      doom-variable-pitch-font (font-spec :family "Go" :size 14))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 14)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 18)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 15))
 
-;; Bold is often too heavy for my taste
-(setq doom-themes-enable-bold nil)
-(setq doom-themes-enable-italic nil)
+(setq doom-themes-enable-bold t)
+(setq doom-themes-enable-italic t)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 ;; (setq doom-theme 'doom-oceanic-next)
+
 (setq doom-theme 'doom-monarized)
 (setq doom-monarized-brighter-comments t)
-
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
 
 ;; Use both explicit tags and the last directory to tag roam notes
 ;; (setq org-roam-tag-sources '(prop last-directory))
@@ -89,73 +87,30 @@
   :desc "Glance at the doc" "d" #'lsp-ui-doc-glance)) ;; go to def is bound to gd anyway
 
 
-(map! :map evil-window-map "SPC" #'ace-swap-window )
+(map! :map evil-window-map "SPC" #'ace-swap-window)
+(map! :map evil-normal-state-map "TAB" #'evil-forward-arg)
 
+;; I don't use this, so let's turn it off
+(after! evil-escape (evil-escape-mode -1))
 
-(add-hook! 'org-mode-hook #'mixed-pitch-mode)
-(setq mixed-pitch-set-height t)
+;; Is there a case where you don't want the substitutions
+;; to be global?
+(after! evil (setq evil-ex-substitute-global t))
 
-(use-package! nroam)
-
-(after! org
-  (setq
-   org-hide-emphasis-markers t
-   org-insert-heading-respect-content nil
-   org-src-tab-acts-natively t)
-  (add-hook 'org-mode-hook #'nroam-setup-maybe)
-  )
-
-(setq-default left-margin-width 2 right-margin-width 2)
-(set-window-buffer nil (current-buffer))
-(setq scroll-margin 6)
+;; (setq-default left-margin-width 2 right-margin-width 2)
+;; (set-window-buffer nil (current-buffer))
+(setq scroll-margin 10)
 
 ;; tty mouse scrolling until https://github.com/hlissner/doom-emacs/issues/4137 is fixed
 (map! :unless (display-graphic-p)
       :nvi "<mouse-4>" (cmd! (scroll-down 1))
       :nvi "<mouse-5>" (cmd! (scroll-up 1)))
 
-(custom-set-faces
- '(org-level-1 ((t (:inherit outline-1 :height 1.2))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.1))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
- '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
- '(org-document-title ((t (:inherit outline-1 :heigth 1.5)))))
-
-(after! org-roam
-  (setq +org-roam-open-buffer-on-find-file nil)
-  (add-hook 'org-roam-mode-hook (lambda ())
-            (variable-pitch-mode 1)))
-
-(setq-hook! 'web-mode-hook +format-with 'prettier-prettify)
 
 ;; I use a colemak scheme, so let's reflect that
 (after! switch-window
   (setq switch-window-shortcut-style 'qwerty
         switch-window-qwerty-shortcuts '("a" "s" "t" "d" "h" "n" "e" "e" "o")))
-
-;; (plist-put +ligatures-extra-symbols
-;;            '(:not-equal "≠"))
-
-
-;; (after! go-mode
-;;   (set-ligatures! 'go-mode
-;;     :lambda "func "
-;;     ;; :true "true" :false "false"
-;;     :null "nil"
-;;     ;; :str "string"
-;;     :yield "select"
-;;     :return "return"
-;;     :and "&&"
-;;     :or "||"
-;;     :not-equal "!="
-;;     :for "for"))
-
-;; (lsp-register-custom-settings
-;;  '(("gopls.completeUnimported" t t)
-;;    ("gopls.staticcheck" t t)))
-;;
-
 
 ;; https://github.com/hlissner/doom-emacs/issues/1530
 (add-hook! 'lsp-after-initialize-hook
@@ -163,26 +118,25 @@
 (defun go-flycheck-setup ()
   (flycheck-add-next-checker 'lsp 'golangci-lint))
 (add-hook 'go-mode-lsp-hook
-          #'go-flycheck-setup)
+          #'go-flycheck-setup )
 
 ;; https://github.com/golang/go/issues/32394
 (after! lsp-mode
   ;; (setq lsp-go-gopls-server-args '("-logfile" "gopls.log" "-rpc.trace") )
+  ;; Not yet released in emacs-lsp
+  ;; (setq lsp-go-use-gofumpt t)
   (lsp-register-custom-settings
-   '(("gopls.experimentalWorkspaceModule" t t))))
+   '(("gopls.experimentalWorkspaceModule" t t)
+     ("gopls.semanticTokens" t t)
+     ("gopls.experimentalPostfixCompletions" t t))))
 
+;; (after! lsp-mode
+;;     (setq lsp-go-codelenses '(gc_details generate tidy)))
 ;; Javascript
 (setq js2-basic-offset 2)
 
-;; Misc scripts
-;; Make the current line highlight active only when idle
-(use-package! hl-line+
-  :load-path "3rd"
-  :config
-  (hl-line-when-idle-interval 0.3)
-  (toggle-hl-line-when-idle 1))
-
 (use-package! dap-mode)
+
 
 ;; custom faces to show breakpoints when in text ui
 (custom-set-faces
@@ -196,10 +150,14 @@
 (after! hl-todo
   (push `(,(concat "NO" "COMMIT") error bold) hl-todo-keyword-faces))
 
-(load! "+functions")
-(load! "themes/doom-nuit-dark-theme")
 
 (setq haskell-process-type 'stack-ghci)
+
+;; (defun +go/test-single-table (
+;;   (interactive)
+;;   (if (string-match "_test\\.go" buffer-file-name)
+;;       (+go--run-tests buffer-file-name)
+;;     (error "Must be in a _test.go file")) )
 
 (defun +go/test-file ()
   (interactive)
@@ -211,3 +169,74 @@
       :localleader
       (:prefix ("t" . "test")
        "f" #'+go/test-file))
+
+;; (defun jh/treemacs-cosmetic-dir (name)
+;;   (concat "▹ " name))
+
+;; (setq treemacs-directory-name-transformer #'jh/treemacs-cosmetic-dir)
+
+(after! dap-mode
+  ;; I rarely want more than this
+  (setq dap-auto-configure-features '(breakpoints locals)))
+
+;; Horrible patch, but does the job
+(defun dap-ui-render-variables (debug-session variables-reference _node)
+  "Render hierarchical variables for treemacs.
+Usable as the `treemacs' :children argument, when DEBUG-SESSION
+and VARIABLES-REFERENCE are applied partially.
+DEBUG-SESSION specifies the debug session which will be used to
+issue requests.
+VARIABLES-REFERENCE specifies the handle returned by the debug
+adapter for acquiring nested variables and must not be 0."
+  (when (dap--session-running debug-session)
+    (->>
+        variables-reference
+      (dap-request debug-session "variables" :variablesReference)
+      (gethash "variables")
+      (-map (-lambda ((&hash "value" "name"
+                             "variablesReference" variables-reference))
+              `(:label ,(concat (propertize (format "%s" name)
+                                            'face 'font-lock-variable-name-face)
+                                ": "
+                                (propertize (s-truncate dap-ui-variable-length
+                                                        (s-replace "\n" "\\n" (replace-regexp-in-string "github\.com/genjidb/genji/" "♠" value)))
+                                            'help-echo value))
+                :icon dap-variable
+                :value ,value
+                :session ,debug-session
+                :variables-reference ,variables-reference
+                :name ,name
+                :actions '(["Set value" dap-ui-set-variable-value])
+                :key ,name
+                ,@(unless (zerop variables-reference)
+                    (list :children
+                          (-partial #'dap-ui-render-variables debug-session
+                                    variables-reference)))))))))
+
+(defun my-frame-tweaks (&optional frame)
+  "My personal frame tweaks."
+  (unless frame
+    (setq frame (selected-frame)))
+  (when frame
+    (with-selected-frame frame
+      (when (display-graphic-p)))
+    (menu-bar-mode -1)))
+
+;; For the case that the init file runs after the frame has been created.
+;; Call of emacs without --daemon option.
+(my-frame-tweaks)
+;; For the case that the init file runs before the frame is created.
+;; Call of emacs with --daemon option.
+(add-hook 'after-make-frame-functions #'my-frame-tweaks t)
+
+
+;; No current line highlight please
+(setq global-hl-line-mode nil)
+(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+
+(add-load-path! "popo")
+(require 'popo-layout)
+
+(load! "+functions")
+(load! "+org")
+(load! "+irc")

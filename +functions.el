@@ -7,7 +7,8 @@
 
 (defun jh/open-project-notes ()
   (interactive)
-  (let* ((name (print (file-name-nondirectory (projectile-project-root))))
-         (name (car (reverse (butlast (split-string (projectile-project-root) "/") 1))))
+  (let* ((name (car (reverse (butlast (split-string (projectile-project-root) "/") 1))))
          (path (concat org-directory "/roam/" name ".org")))
     (find-file path)))
+
+

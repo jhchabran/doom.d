@@ -60,13 +60,14 @@
 (package! org-web-tools
   :recipe (:host github :repo "alphapapa/org-web-tools"))
 
-(package! nroam
-  :recipe (:host github :repo "NicolasPetton/nroam"))
-
-;; (package! dap-mode
-;;   :recipe (:host github :repo "emacs-lsp/dap-mode"))
-
 (package! mixed-pitch)
 (unpin! doom-themes)
 
+(package! flycheck-golangci-lint
+  :recipe (:host github :repo "drvspw/flycheck-golangci-lint"))
+
 (package! mixed-pitch)
+(package! realgud-trepan-ni :disable t)
+
+;; It's really nice, but this one really slow things down for me.
+(package! solaire-mode :disable t)
