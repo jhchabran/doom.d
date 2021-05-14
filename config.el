@@ -234,8 +234,23 @@ adapter for acquiring nested variables and must not be 0."
 (setq global-hl-line-mode nil)
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 
-(add-load-path! "popo")
-(require 'popo-layout)
+;; Some tweaks taken from Nicolas Rougier Elegant emacs,
+;; https://github.com/rougier/elegant-emacs.
+(setq default-frame-alist
+      (append (list
+               '(min-height . 1)  '(height     . 45)
+               '(min-width  . 1) '(width      . 81)
+               '(vertical-scroll-bars . nil)
+               '(internal-border-width . 21)
+               '(left-fringe    . 0)
+               '(right-fringe   . 0)
+               '(tool-bar-lines . 0)
+               '(menu-bar-lines . 0))))
+
+;; Vertical window divider
+(setq window-divider-default-right-width 20)
+(setq window-divider-default-places 'right-only)
+(window-divider-mode 1)
 
 (load! "+functions")
 (load! "+org")
