@@ -234,6 +234,10 @@ adapter for acquiring nested variables and must not be 0."
 (setq global-hl-line-mode nil)
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 
+;;; Do not prompt me for which langage to HL when inserting code blocks
+;;; in markdown.
+(setq markdown-gfm-use-electric-backquote nil)
+
 ;; Some tweaks taken from Nicolas Rougier Elegant emacs,
 ;; https://github.com/rougier/elegant-emacs.
 (setq default-frame-alist
