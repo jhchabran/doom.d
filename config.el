@@ -259,3 +259,9 @@ adapter for acquiring nested variables and must not be 0."
 (load! "+functions")
 (load! "+org")
 (load! "+irc")
+
+;; temp fix https://discord.com/channels/406534637242810369/406554085794381833/841224052919107594
+(defadvice! shut-up-format-enable-on-save-h (orig-fn &rest args)
+  :around #'+format-enable-on-save-h
+  (unless (memq (car (format-all--probe)) '(:none nil))
+    (apply orig-fn args)))
