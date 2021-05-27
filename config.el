@@ -24,9 +24,9 @@
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
-(setq doom-font (font-spec :family "JetBrains Mono" :size 14)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 18)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 15))
+(setq doom-font (font-spec :family "JetBrains Mono Light" :size 14)
+      doom-big-font (font-spec :family "JetBrains Mono Light" :size 18)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 16))
 
 (setq doom-themes-enable-bold t)
 (setq doom-themes-enable-italic t)
@@ -73,7 +73,7 @@
 
 (map!
  :leader
- ;; clear existing binding, I use C-w all the time instead
+ ;; clear existing window binding, C-w is really hardwired in my brain anyway
  "SPC" nil
  :desc "Save current buffer" "w" #'save-buffer
  (:prefix-map ("b" . "buffer")
@@ -81,24 +81,18 @@
  (:prefix-map ("p" . "project")
   :desc "Launch term with custom name" "$" #'jh/launch-term-and-rename)
  (:prefix-map ("p" . "project")
-  :desc "Open notes for the current project" "n" #'jh/open-project-notes)
- (:prefix-map ("c" . "code")
-  :desc "Jump to local symbol" "c" #'ivy-lsp-current-buffer-symbols-jump
-  :desc "Glance at the doc" "d" #'lsp-ui-doc-glance)) ;; go to def is bound to gd anyway
-
+  :desc "Open notes for the current project" "n" #'jh/open-project-notes))
 
 (map! :map evil-window-map "SPC" #'ace-swap-window)
 (map! :map evil-normal-state-map "TAB" #'evil-forward-arg)
 
-;; I don't use this, so let's turn it off
+;; I don't use stuff like jk to go back to normal mode, so let's turn it off.
 (after! evil-escape (evil-escape-mode -1))
 
 ;; Is there a case where you don't want the substitutions
 ;; to be global?
 (after! evil (setq evil-ex-substitute-global t))
 
-;; (setq-default left-margin-width 2 right-margin-width 2)
-;; (set-window-buffer nil (current-buffer))
 (setq scroll-margin 10)
 
 ;; tty mouse scrolling until https://github.com/hlissner/doom-emacs/issues/4137 is fixed
@@ -112,30 +106,10 @@
   (setq switch-window-shortcut-style 'qwerty
         switch-window-qwerty-shortcuts '("a" "s" "t" "d" "h" "n" "e" "e" "o")))
 
-;; https://github.com/hlissner/doom-emacs/issues/1530
-(add-hook! 'lsp-after-initialize-hook
-  (run-hooks (intern (format "%s-lsp-hook" major-mode))))
-(defun go-flycheck-setup ()
-  (flycheck-add-next-checker 'lsp 'golangci-lint))
-(add-hook 'go-mode-lsp-hook
-          #'go-flycheck-setup )
 
-;; https://github.com/golang/go/issues/32394
-(after! lsp-mode
-  ;; (setq lsp-go-gopls-server-args '("-logfile" "gopls.log" "-rpc.trace") )
-  ;; Not yet released in emacs-lsp
-  ;; (setq lsp-go-use-gofumpt t)
-  (lsp-register-custom-settings
-   '(("gopls.experimentalWorkspaceModule" t t)
-     ("gopls.semanticTokens" t t)
-     ("gopls.experimentalPostfixCompletions" t t))))
-
-;; (after! lsp-mode
-;;     (setq lsp-go-codelenses '(gc_details generate tidy)))
 ;; Javascript
 (setq js2-basic-offset 2)
 
-(use-package! dap-mode)
 
 
 ;; custom faces to show breakpoints when in text ui
@@ -143,8 +117,6 @@
  '(dap-ui-pending-breakpoint-face ((t (:foreground "#d33682"))))
  '(dap-ui-verified-breakpoint-face ((t (:background "#d33682" :foreground "#13383C")))))
 
-;; My own stuff
-(require 'ivy-lsp-current-buffer-symbols)
 
 ;; When I want to prevent myself from committing something, I enter the NO COMMIT comment (without space, otherwise it'll trigger the githook here)
 (after! hl-todo
@@ -169,49 +141,6 @@
       :localleader
       (:prefix ("t" . "test")
        "f" #'+go/test-file))
-
-;; (defun jh/treemacs-cosmetic-dir (name)
-;;   (concat "▹ " name))
-
-;; (setq treemacs-directory-name-transformer #'jh/treemacs-cosmetic-dir)
-
-(after! dap-mode
-  ;; I rarely want more than this
-  (setq dap-auto-configure-features '(breakpoints locals)))
-
-;; Horrible patch, but does the job
-(defun dap-ui-render-variables (debug-session variables-reference _node)
-  "Render hierarchical variables for treemacs.
-Usable as the `treemacs' :children argument, when DEBUG-SESSION
-and VARIABLES-REFERENCE are applied partially.
-DEBUG-SESSION specifies the debug session which will be used to
-issue requests.
-VARIABLES-REFERENCE specifies the handle returned by the debug
-adapter for acquiring nested variables and must not be 0."
-  (when (dap--session-running debug-session)
-    (->>
-        variables-reference
-      (dap-request debug-session "variables" :variablesReference)
-      (gethash "variables")
-      (-map (-lambda ((&hash "value" "name"
-                             "variablesReference" variables-reference))
-              `(:label ,(concat (propertize (format "%s" name)
-                                            'face 'font-lock-variable-name-face)
-                                ": "
-                                (propertize (s-truncate dap-ui-variable-length
-                                                        (s-replace "\n" "\\n" (replace-regexp-in-string "github\.com/genjidb/genji/" "♠" value)))
-                                            'help-echo value))
-                :icon dap-variable
-                :value ,value
-                :session ,debug-session
-                :variables-reference ,variables-reference
-                :name ,name
-                :actions '(["Set value" dap-ui-set-variable-value])
-                :key ,name
-                ,@(unless (zerop variables-reference)
-                    (list :children
-                          (-partial #'dap-ui-render-variables debug-session
-                                    variables-reference)))))))))
 
 (defun my-frame-tweaks (&optional frame)
   "My personal frame tweaks."
@@ -257,7 +186,9 @@ adapter for acquiring nested variables and must not be 0."
 (window-divider-mode 1)
 
 (load! "+functions")
+(load! "+git")
 (load! "+org")
+(load! "+lsp")
 (load! "+irc")
 
 ;; temp fix https://discord.com/channels/406534637242810369/406554085794381833/841224052919107594
@@ -265,3 +196,6 @@ adapter for acquiring nested variables and must not be 0."
   :around #'+format-enable-on-save-h
   (unless (memq (car (format-all--probe)) '(:none nil))
     (apply orig-fn args)))
+
+;; https://gitlab.com/zzamboni/dot-doom/-/tree/master/splash
+(setq fancy-splash-image (concat doom-private-dir "splash/doom-emacs-color.png"))

@@ -71,3 +71,9 @@
 
 ;; It's really nice, but this one really slow things down for me.
 (package! solaire-mode :disable t)
+
+(package! go-playground
+  :recipe (:host github :repo "grafov/go-playground"))
+
+(package! magit-delta
+  :recipe (:host github :repo "dandavison/magit-delta"))
