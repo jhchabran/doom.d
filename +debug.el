@@ -1,7 +1,12 @@
 (use-package! dap-mode)
 
 (after! dap-mode
-  ;; I rarely want more than this
+  ;; custom faces to show breakpoints when in text ui
+  (custom-set-faces
+   '(dap-ui-pending-breakpoint-face ((t (:foreground "#d33682"))))
+   '(dap-ui-verified-breakpoint-face ((t (:background "#d33682" :foreground "#13383C")))))
+
+  ;; Display only locals and breakpoints by default
   (setq dap-auto-configure-features '(breakpoints locals)))
 
 ;; TODO is there a better way to do this? defadvice maybe?
